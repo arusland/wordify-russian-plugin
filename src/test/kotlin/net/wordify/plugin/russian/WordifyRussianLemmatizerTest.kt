@@ -5,7 +5,7 @@ import kotlin.test.assertTrue
 
 class WordifyRussianLemmatizerTest {
     @Test
-    fun `Lemmatizer simple test`() {
+    fun `Lemmatize simple test`() {
         val lemmatizer = WordifyRussianLemmatizer()
 
         val result = lemmatizer.extract(listOf("сделал", "козе", "баян").iterator())
@@ -14,7 +14,7 @@ class WordifyRussianLemmatizerTest {
     }
 
     @Test
-    fun `Lemmatizer sample test`() {
+    fun `Lemmatize sample test`() {
         val tokenizer = WordifyRussianTokenizer()
         val lemmatizer = WordifyRussianLemmatizer()
 
@@ -25,6 +25,30 @@ class WordifyRussianLemmatizerTest {
         lemmas.forEach {
             assertTrue { it.isNotBlank() }
             println(it)
+        }
+
+        println("Found ${lemmas.size} lemmas")
+    }
+
+    @Test
+    fun `Lemmatize large text`() {
+        val content = javaClass.classLoader
+                .getResourceAsStream("samples/Пушкин - Капитанская дочка.txt")
+                .bufferedReader()
+                .readText()
+
+        val tokenizer = WordifyRussianTokenizer()
+        val lemmatizer = WordifyRussianLemmatizer()
+
+        val tokens = tokenizer.parse(content).asSequence().distinct().toList()
+        println("Found ${tokens.size} tokens")
+
+        val lemmas = lemmatizer.extract(tokens.iterator())
+                .asSequence()
+                .toList()
+
+        lemmas.forEach {
+            assertTrue { it.isNotBlank() }
         }
 
         println("Found ${lemmas.size} lemmas")
