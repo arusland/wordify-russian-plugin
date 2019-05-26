@@ -13,4 +13,14 @@ class WordifyRussianTokenizerTest {
 
         assertEquals(words, listOf("привет", "ёж", "как", "ты", "докатился", "до", "такого", "состояния", "ёжжжжж"))
     }
+
+    @Test
+    fun `Test parsing words with illegal chars at start`() {
+        val tokenizer = WordifyRussianTokenizer()
+        val words = tokenizer.parse("Привет, 7ёж! -ты ТумаН!!")
+                .asSequence()
+                .toList()
+
+        assertEquals(listOf("привет", "туман"), words)
+    }
 }
